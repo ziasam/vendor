@@ -30,3 +30,6 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     wellbeingconf \
     googleconf
+
+-include packages/apps/Plugins/plugins.mk
+
