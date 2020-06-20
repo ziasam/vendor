@@ -28,4 +28,5 @@ PRODUCT_PACKAGES += \
 
 # Google icons mess
 PRODUCT_PACKAGES += \
-    wellbeingconf
+    wellbeingconf \
+    googleconf
