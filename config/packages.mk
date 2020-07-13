@@ -7,7 +7,8 @@ PRODUCT_PACKAGES += \
     CustomDoze \
     StitchImage \
     ThemePicker \
-    DU-Themes
+    DU-Themes \
+    PixelThemesStub2019
 
 # Local Updater
 ifneq ($(AB_OTA_PARTITIONS),)
