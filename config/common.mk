@@ -81,6 +81,16 @@ include vendor/kangos/config/pixel2-audio_prebuilt.mk
 # Bootanimation
 include vendor/kangos/config/bootanimation.mk
 
+# Face Unlock
+TARGET_FACE_UNLOCK_SUPPORTED := true
+ifneq ($(TARGET_DISABLE_ALTERNATIVE_FACE_UNLOCK), true)
+PRODUCT_PACKAGES += \
+    FaceUnlockService
+TARGET_FACE_UNLOCK_SUPPORTED := true
+endif
+PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
+    ro.face.moto_unlock_service=$(TARGET_FACE_UNLOCK_SUPPORTED)
+
 # Fonts
 include vendor/kangos/config/fonts.mk
 
