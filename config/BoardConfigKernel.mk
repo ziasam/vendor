@@ -23,8 +23,8 @@
 #   TARGET_KERNEL_ARCH                 = Kernel Arch
 #   TARGET_KERNEL_CROSS_COMPILE_PREFIX = Compiler prefix (e.g. arm-eabi-)
 #                                          defaults to arm-linux-androidkernel- for arm
-#                                                      aarch64-linux-androidkernel- for arm64
-#                                                      x86_64-linux-androidkernel- for x86
+#                                                      aarch64-linux-android- for arm64
+#                                                      x86_64-linux-android- for x86
 #
 #   TARGET_KERNEL_CLANG_COMPILE        = Compile kernel with clang, defaults to false
 #
@@ -55,15 +55,11 @@ TARGET_KERNEL_CROSS_COMPILE_PREFIX := $(strip $(TARGET_KERNEL_CROSS_COMPILE_PREF
 ifneq ($(TARGET_KERNEL_CROSS_COMPILE_PREFIX),)
 KERNEL_TOOLCHAIN_PREFIX ?= $(TARGET_KERNEL_CROSS_COMPILE_PREFIX)
 else ifeq ($(KERNEL_ARCH),arm64)
-ifeq ($(TARGET_KERNEL_CLANG_COMPILE),true)
-    KERNEL_TOOLCHAIN_PREFIX ?= aarch64-linux-android-
-else
-    KERNEL_TOOLCHAIN_PREFIX ?= aarch64-linux-androidkernel-
-endif
+KERNEL_TOOLCHAIN_PREFIX ?= aarch64-linux-android-
 else ifeq ($(KERNEL_ARCH),arm)
 KERNEL_TOOLCHAIN_PREFIX ?= arm-linux-androidkernel-
 else ifeq ($(KERNEL_ARCH),x86)
-KERNEL_TOOLCHAIN_PREFIX ?= x86_64-linux-androidkernel-
+KERNEL_TOOLCHAIN_PREFIX ?= x86_64-linux-android-
 endif
 
 ifeq ($(KERNEL_TOOLCHAIN),)
@@ -72,7 +68,22 @@ else ifneq ($(KERNEL_TOOLCHAIN_PREFIX),)
 KERNEL_TOOLCHAIN_PATH := $(KERNEL_TOOLCHAIN)/$(KERNEL_TOOLCHAIN_PREFIX)
 endif
 
-BUILD_TOP := $(shell pwd)
+# We need to add GCC toolchain to the path no matter what
+# for tools like `as`
+KERNEL_TOOLCHAIN_PATH_gcc := $(KERNEL_TOOLCHAIN_$(KERNEL_ARCH))/$(KERNEL_TOOLCHAIN_PREFIX_$(KERNEL_ARCH))
+
+ifneq ($(USE_CCACHE),)
+    # Detect if the system already has ccache installed to use instead of the prebuilt
+        ifneq (,$(wildcard $(OUT_DIR)/.path_interposer_origpath))
+	CCACHE_BIN := $(shell PATH=$(shell cat $(OUT_DIR)/.path_interposer_origpath):$$PATH which ccache)
+        endif
+
+    ifeq ($(CCACHE_BIN),)
+        CCACHE_BIN := $(BUILD_TOP)/prebuilts/misc/$(HOST_PREBUILT_TAG)/ccache/ccache
+        # Check that the executable is here.
+        CCACHE_BIN := $(strip $(wildcard $(CCACHE_BIN)))
+    endif
+endif
 
 ifeq ($(TARGET_KERNEL_CLANG_COMPILE),true)
     KERNEL_CROSS_COMPILE := CROSS_COMPILE="$(KERNEL_TOOLCHAIN_PATH)"
@@ -89,7 +100,9 @@ endif
 KERNEL_MAKE_FLAGS :=
 
 # Add back threads, ninja cuts this to $(nproc)/2
-KERNEL_MAKE_FLAGS += -j$(shell nproc --all)
+ifneq (,$(wildcard $(OUT_DIR)/.path_interposer_origpath))
+KERNEL_MAKE_FLAGS += -j$(shell PATH=$(shell cat $(OUT_DIR)/.path_interposer_origpath):$$PATH nproc --all)
+endif
 
 ifeq ($(KERNEL_ARCH),arm)
   # Avoid "Unknown symbol _GLOBAL_OFFSET_TABLE_" errors
@@ -106,9 +119,21 @@ ifeq ($(HOST_OS),darwin)
   KERNEL_MAKE_FLAGS += LIBRARY_PATH=/usr/local/opt/openssl/lib
 endif
 
+ifneq ($(TARGET_KERNEL_ADDITIONAL_FLAGS),)
+  KERNEL_MAKE_FLAGS += $(TARGET_KERNEL_ADDITIONAL_FLAGS)
+endif
+
 # Set DTBO image locations so the build system knows to build them
 ifeq ($(TARGET_NEEDS_DTBOIMAGE),true)
 BOARD_PREBUILT_DTBOIMAGE ?= $(PRODUCT_OUT)/dtbo/arch/$(KERNEL_ARCH)/boot/dtbo.img
 else ifeq ($(BOARD_KERNEL_SEPARATED_DTBO),true)
 BOARD_PREBUILT_DTBOIMAGE ?= $(PRODUCT_OUT)/dtbo-pre.img
+endif
+
+# Set the out dir for the kernel's O= arg
+# This needs to be an absolute path, so only set this if the standard out dir isn't used
+OUT_DIR_PREFIX := $(shell echo $(OUT_DIR) | sed -e 's|/target/.*$$||g')
+KERNEL_BUILD_OUT_PREFIX :=
+ifeq ($(OUT_DIR_PREFIX),out)
+KERNEL_BUILD_OUT_PREFIX := $(BUILD_TOP)/
 endif
