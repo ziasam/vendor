@@ -1,8 +1,6 @@
 include vendor/kangos/build/core/vendor/*.mk
 
-ifneq ($(TARGET_DOES_NOT_USE_GAPPS), true)
-$(call inherit-product-if-exists, vendor/google/gapps/gapps-vendor.mk)
-endif
+include vendor/revengeos/config/fingerprint.mk
 
 ifeq ($(USE_GAPPS), true)
 $(call inherit-product, vendor/gapps/gapps.mk)
