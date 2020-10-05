@@ -107,4 +107,8 @@
         <item>com.linkedin.android</item>
         <item>com.tencent.mm</item>
     </string-array>
+
+    <!-- Whether or not to add a "people" notifications section -->
+    <bool name="config_usePeopleFiltering">true</bool>
+
 </resources>
