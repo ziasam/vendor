@@ -4,6 +4,10 @@ ifneq ($(TARGET_DOES_NOT_USE_GAPPS), true)
 $(call inherit-product-if-exists, vendor/google/gapps/gapps-vendor.mk)
 endif
 
+ifeq ($(USE_GAPPS), true)
+$(call inherit-product, vendor/gapps/gapps.mk)
+endif
+
 ifeq ($(PRODUCT_USES_QCOM_HARDWARE), true)
 include vendor/kangos/build/core/ProductConfigQcom.mk
 endif
@@ -73,7 +77,7 @@ PRODUCT_BUILD_PROP_OVERRIDES += \
 include vendor/kangos/config/packages.mk
 
 # Branding
-include vendor/kangos/config/branding.mk
+include vendor/kangos/config/version.mk
 
 # Sounds
 include vendor/kangos/config/pixel2-audio_prebuilt.mk
