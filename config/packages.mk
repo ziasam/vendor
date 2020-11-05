@@ -8,7 +8,8 @@ PRODUCT_PACKAGES += \
     StitchImage \
     ThemePicker \
     DU-Themes \
-    WallpaperPickerGoogle
+    MatchmakerPrebuilt \
+    WallpaperPickerGoogle 
 
 # Local Updater
 ifneq ($(AB_OTA_PARTITIONS),)
