@@ -8,7 +8,6 @@ PRODUCT_PACKAGES += \
     StitchImage \
     ThemePicker \
     DU-Themes \
-    PixelThemesStub2019 \
     WallpaperPickerGoogle
 
 # Local Updater
