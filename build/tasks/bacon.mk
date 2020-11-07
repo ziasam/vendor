@@ -22,4 +22,12 @@ KANGOS_TARGET_PACKAGE := $(PRODUCT_OUT)/$(KANGOS_VERSION).zip
 bacon: $(INTERNAL_OTA_PACKAGE_TARGET)
 	$(hide) ln -f $(INTERNAL_OTA_PACKAGE_TARGET) $(KANGOS_TARGET_PACKAGE)
 	$(hide) $(MD5SUM) $(KANGOS_TARGET_PACKAGE) | sed "s|$(PRODUCT_OUT)/||" > $(KANGOS_TARGET_PACKAGE).md5sum
-	@echo "Package Complete: $(KANGOS_TARGET_PACKAGE)" >&2
+	$(hide) ln -f $(INTERNAL_OTA_PACKAGE_TARGET) $(KANGOS_TARGET_PACKAGE)
+	$(hide) $(MD5SUM) $(KANGOS_TARGET_PACKAGE) | sed "s|$(PRODUCT_OUT)/||" > $(KANGOS_TARGET_PACKAGE).md5sum
+	echo -e ${CL_BLD}${CL_RED}"===============================-Package complete-==============================="${CL_RED}
+	echo -e ${CL_BLD}${CL_GRN}"Zip: "${CL_RED} $(KANGOSTARGET_PACKAGE)${CL_RST}
+	echo -e ${CL_BLD}${CL_GRN}"MD5: "${CL_RED}" `cat $(KANGOS_TARGET_PACKAGE).md5sum | kang '{print $$1}' `"${CL_RST}
+	echo -e ${CL_BLD}${CL_GRN}"Size:"${CL_RED}" `du -sh $(KANGOS_TARGET_PACKAGE) | kang '{print $$1}' `"${CL_RST}
+	echo -e ${CL_BLD}${CL_GRN}"TimeStamp:"${CL_RED}" `cat $(PRODUCT_OUT)/system/build.prop | grep ro.build.date.utc | cut -d'=' -f2 | awk '{print $$1}' `"${CL_RST}
+	echo -e ${CL_BLD}${CL_GRN}"Integer Value:"${CL_RED}" `wc -c $(KANGOS_TARGET_PACKAGE) | kang '{print $$1}' `"${CL_RST}
+	echo -e ${CL_BLD}${CL_RED}"================================================================================"${CL_RED}
