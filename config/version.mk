@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-KANGOS_CODENAME := R
-KANGOS_REVISION := 4
-KANGOS_SUBREVISION := 0
+KANGOS_CODENAME := R-Bongo
+KANGOS_REVISION := 11
+KANGOS_SUBREVISION := 1
 
 KANGOS_VERSION := $(KANGOS_REVISION).$(KANGOS_SUBREVISION)
 KANGOS_BUILD_DATE := $(shell date -u +%Y%m%d-%H%M)
