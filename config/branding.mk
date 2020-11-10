@@ -1,0 +1,16 @@
+BUILD_DATE := $(shell date +%Y%m%d)
+BUILD_TIME := $(shell date +%H%M)
+# Versioning System
+# Use signing keys for only official
+ifndef KANGOS_BUILD_TYPE
+    KANGOS_BUILD_TYPE := UNOFFICIAL
+endif
+
+# Set all versions
+KANGOS_BASE_VERSION := 1.0
+KANGOS_PLATFORM_VERSION := 11
+KANGOS_VERSION := $(TARGET_PRODUCT)-$(BUILD_DATE)-$(BUILD_TIME)-$(KANGOS_PLATFORM_VERSION)-$(KANGOS_BASE_VERSION)-$(KANGOS_BUILD_TYPE)
+ROM_FINGERPRINT := KangOS/$(PLATFORM_VERSION)/$(KANGOS_BUILD_TYPE)/$(BUILD_DATE)$(BUILD_TIME)
+
+# Declare it's a KangOS build
+KANGOS_BUILD := true
