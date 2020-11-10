@@ -9,7 +9,13 @@ PRODUCT_PACKAGES += \
     ThemePicker \
     DU-Themes \
     MatchmakerPrebuilt \
-    WallpaperPickerGoogle 
+    WallpaperPickerGoogle \
+    OmniJaws \
+    WeatherIcons \
+    BluetoothExt \
+    Calendar \
+    Stk  \
+    Snap
 
 # Local Updater
 ifneq ($(AB_OTA_PARTITIONS),)

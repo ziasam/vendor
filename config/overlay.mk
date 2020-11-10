@@ -35,14 +35,7 @@ PRODUCT_PACKAGES += \
     FontGoogleSansOverlay \
     FontOnePlusSlateOverlay \
     FontBarlowOverlay \
-    FontSanFranciscoOverlay \
-
-# Icon Theme Packages
-PRODUCT_PACKAGES += \
-    IconShapeHexagonOverlay \
-    IconShapePebbleOverlay \
-    IconShapeTaperedRectOverlay \
-    IconShapeVesselOverlay
+    FontSanFranciscoOverlay 
 
 # Cutout Overlays
 ifeq ($(TARGET_HAS_NOTCH),true)
