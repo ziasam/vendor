@@ -1,6 +1,6 @@
 include vendor/kangos/build/core/vendor/*.mk
 
-include vendor/revengeos/config/fingerprint.mk
+include vendor/kangos/config/fingerprint.mk
 
 ifeq ($(USE_GAPPS), true)
 $(call inherit-product, vendor/gapps/gapps.mk)
